@@ -66,7 +66,7 @@ public class HelloController {
             msglbl.setText("Loading Registration Screen...");
 
 
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Resister.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Register.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
 
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
@@ -78,7 +78,7 @@ public class HelloController {
         } catch (IOException e) {
             e.printStackTrace();
             msglbl.setStyle("-fx-text-fill: red;");
-            msglbl.setText("Error: Could not load Resister.fxml");
+            msglbl.setText("Error: Could not load Register.fxml");
         }
     }
 }
