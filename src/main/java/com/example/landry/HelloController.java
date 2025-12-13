@@ -52,6 +52,18 @@ public class HelloController {
             msglbl.setText("Customer Login Success!");
 
 
+            try {
+                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Client.fxml"));
+                Scene scene = new Scene(fxmlLoader.load());
+                Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+                stage.setTitle("Client Dashboard");
+                stage.setScene(scene);
+                stage.show();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+
         } else {
             msglbl.setStyle("-fx-text-fill: red;");
             msglbl.setText("Invalid Username or Password!");
