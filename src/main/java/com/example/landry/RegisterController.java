@@ -9,6 +9,9 @@ import javafx.scene.control.Label;
 import javafx.scene.control.PasswordField;
 import javafx.scene.control.TextField;
 import javafx.stage.Stage;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 
 import java.io.IOException;
 
@@ -30,6 +33,7 @@ public class RegisterController {
     private Label statusLabel;
 
     @FXML
+
     public void Register(ActionEvent event) {
         String name = NameField.getText();
         String phone = phnField.getText();
@@ -42,11 +46,38 @@ public class RegisterController {
             return;
         }
 
-        //database er kaj pore korbo( user info insertion)
+        String insertSql = "INSERT INTO users(phone, name, password, address, role) VALUES(?, ?, ?, ?, ?)";
 
+        try (Connection conn = database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(insertSql)) {
 
-        statusLabel.setStyle("-fx-text-fill: green;");
-        statusLabel.setText("Account Created! Please Login.");
+            pstmt.setString(1, phone);
+            pstmt.setString(2, name);
+            pstmt.setString(3, pass);
+            pstmt.setString(4, address);
+            pstmt.setString(5, "Customer");
+
+            pstmt.executeUpdate();
+
+            statusLabel.setStyle("-fx-text-fill: green;");
+            statusLabel.setText("Account Created! Please Login.");
+
+            NameField.clear();
+            phnField.clear();
+            addField.clear();
+            passField.clear();
+
+        } catch (SQLException e) {
+
+            e.printStackTrace();
+            statusLabel.setStyle("-fx-text-fill: red;");
+
+            if (e.getMessage().contains("UNIQUE constraint failed")) {
+                statusLabel.setText("Phone number already registered!");
+            } else {
+                statusLabel.setText("Database Error: " + e.getMessage());
+            }
+        }
     }
 
     @FXML
