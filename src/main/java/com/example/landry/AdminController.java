@@ -12,6 +12,12 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+import java.io.IOException;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import javafx.scene.control.Alert;
 
 import java.io.IOException;
 
@@ -37,12 +43,35 @@ public class AdminController {
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
 
-//        // some dummy data
 //        orderList.add(new OrderModel(101, "Rahim Ahmed", "Pending", 150.0));
 //        orderList.add(new OrderModel(102, "Karim Ullah", "Washing", 320.0));
 //        orderList.add(new OrderModel(103, "Sultana Begum", "Ready", 80.0));
 
-        orderTable.setItems(orderList);
+        loadOrders();
+    }
+
+    private void loadOrders() {
+        orderList.clear();
+        String sql = "SELECT * FROM orders";
+
+        try (Connection conn = database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql);
+             ResultSet rs = pstmt.executeQuery()) {
+
+            while (rs.next()) {
+
+                int id = rs.getInt("order_id");
+                String phone = rs.getString("customer_phone");
+                String status = rs.getString("status");
+                double amount = rs.getDouble("amount");
+                orderList.add(new OrderModel(id, phone, status, amount));
+            }
+
+            orderTable.setItems(orderList);
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     // 2. Status Update Logic
@@ -55,13 +84,35 @@ public class AdminController {
 
     private void updateStatus(String newStatus) {
         OrderModel selectedOrder = orderTable.getSelectionModel().getSelectedItem();
-        if (selectedOrder != null) {
-            selectedOrder.setStatus(newStatus);
-            orderTable.refresh(); // Refresh the UI to show changes
-            System.out.println("Order " + selectedOrder.getOrderId() + " changed to " + newStatus);
-        } else {
-            System.out.println("Please select an order first!");
+        if (selectedOrder == null) {
+            showAlert("Error", "Please select an order from the table first!");
+            return;
         }
+
+        String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
+
+        try (Connection conn = database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, newStatus);
+            pstmt.setInt(2, selectedOrder.getOrderId());
+            pstmt.executeUpdate();
+
+            showAlert("Success", "Order #" + selectedOrder.getOrderId() + " updated to: " + newStatus);
+
+            loadOrders();
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            showAlert("Database Error", e.getMessage());
+        }
+    }
+    private void showAlert(String title, String message) {
+        Alert alert = new Alert(Alert.AlertType.INFORMATION);
+        alert.setTitle(title);
+        alert.setHeaderText(null);
+        alert.setContentText(message);
+        alert.showAndWait();
     }
 
 
