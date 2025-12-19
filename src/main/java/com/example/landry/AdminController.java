@@ -6,6 +6,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
@@ -36,10 +37,10 @@ public class AdminController {
         colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
         colTotal.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
 
-        // some dummy data
-        orderList.add(new OrderModel(101, "Rahim Ahmed", "Pending", 150.0));
-        orderList.add(new OrderModel(102, "Karim Ullah", "Washing", 320.0));
-        orderList.add(new OrderModel(103, "Sultana Begum", "Ready", 80.0));
+//        // some dummy data
+//        orderList.add(new OrderModel(101, "Rahim Ahmed", "Pending", 150.0));
+//        orderList.add(new OrderModel(102, "Karim Ullah", "Washing", 320.0));
+//        orderList.add(new OrderModel(103, "Sultana Begum", "Ready", 80.0));
 
         orderTable.setItems(orderList);
     }
@@ -67,10 +68,15 @@ public class AdminController {
     @FXML
     public void Logout(ActionEvent event) throws IOException {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load());
+        Parent root = fxmlLoader.load();
         Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        double currentWidth = stage.getWidth();
+        double currentHeight = stage.getHeight();
+        Scene scene = new Scene(root);
         stage.setScene(scene);
-        stage.show();
+        stage.setWidth(currentWidth);
+        stage.setHeight(currentHeight);
+
     }
 
 

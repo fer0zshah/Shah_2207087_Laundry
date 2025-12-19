@@ -11,6 +11,7 @@ module com.example.landry {
     requires eu.hansolo.tilesfx;
     requires com.almasb.fxgl.all;
     requires java.sql;
+    requires javafx.graphics;
 
     opens com.example.landry to javafx.fxml;
     exports com.example.landry;

@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
@@ -51,21 +52,20 @@ public class HelloController {
             ResultSet rs = pstmt.executeQuery();
 
             if (rs.next()) {
-                // User Found! Get their role
+
                 String role = rs.getString("role");
 
                 if (role.equalsIgnoreCase("Admin")) {
                     msglbl.setStyle("-fx-text-fill: green;");
                     msglbl.setText("Admin Login Success!");
-                    openDashboard("Admin.fxml", "Admin Dashboard", event);
+                    openDashboard("Admin.fxml", "Admin Dashboard", event,user);
                 } else {
                     msglbl.setStyle("-fx-text-fill: blue;");
                     msglbl.setText("Customer Login Success!");
-                    openDashboard("Client.fxml", "Client Dashboard", event);
+                    openDashboard("Client.fxml", "Client Dashboard", event,user);
                 }
 
             } else {
-                // User NOT Found
                 msglbl.setStyle("-fx-text-fill: red;");
                 msglbl.setText("Invalid Phone or Password!");
             }
@@ -76,14 +76,22 @@ public class HelloController {
             msglbl.setText("Database Connection Error.");
         }
     }
-    private void openDashboard(String fxmlFile, String title, ActionEvent event) {
+    private void openDashboard(String fxmlFile, String title, ActionEvent event,String user) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource(fxmlFile));
-            Scene scene = new Scene(fxmlLoader.load());
+            Parent root = fxmlLoader.load();
+            if(fxmlFile.equals("Client.fxml")){
+                ClientController controller = fxmlLoader.getController();
+                controller.setUserId(user);
+            }
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-            stage.setTitle(title);
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            Scene scene = new Scene(root);
             stage.setScene(scene);
-            stage.show();
+            stage.setTitle(title);
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
         } catch (IOException e) {
             e.printStackTrace();
             msglbl.setText("Error loading " + fxmlFile);
@@ -101,13 +109,17 @@ public class HelloController {
 
 
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("Register.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
-
+            Parent root=fxmlLoader.load();
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+
+            Scene scene = new Scene(root);
 
             stage.setTitle("Create Account");
             stage.setScene(scene);
-            stage.show();
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
 
         } catch (IOException e) {
             e.printStackTrace();

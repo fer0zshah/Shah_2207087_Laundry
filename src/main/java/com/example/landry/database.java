@@ -22,7 +22,7 @@ public class database {
     }
 
     public static void initializeDB() {
-        // SQL to create the USERS table
+
         String sql = "CREATE TABLE IF NOT EXISTS users ("
                 + "phone TEXT PRIMARY KEY, "
                 + "name TEXT NOT NULL, "
@@ -30,11 +30,20 @@ public class database {
                 + "address TEXT, "
                 + "role TEXT NOT NULL"
                 + ");";
+        String sqlOrders = "CREATE TABLE IF NOT EXISTS orders ("
+                + "order_id INTEGER PRIMARY KEY AUTOINCREMENT, "
+                + "customer_phone TEXT, "
+                + "details TEXT, "
+                + "pickup_date TEXT, "
+                + "status TEXT, "
+                + "amount DOUBLE"
+                + ");";
 
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
 
             stmt.execute(sql);
+            stmt.execute(sqlOrders);
             System.out.println("Database initialized and Users table checked.");
 
 
