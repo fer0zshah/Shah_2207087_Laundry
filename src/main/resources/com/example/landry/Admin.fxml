@@ -9,17 +9,17 @@
 <?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<BorderPane xmlns="http://javafx.com/javafx/25" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.landry.AdminController">
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.landry.AdminController">
 
     <top>
         <HBox alignment="CENTER_LEFT" spacing="20.0" style="-fx-background-color: #bfa316; -fx-padding: 15;">
-            <Label text=" Admin" textFill="#ede8e9">
+            <Label text=" Admin Dashboard" textFill="#ede8e9">
                 <font>
                     <Font name="System Bold" size="20.0" />
                 </font>
             </Label>
             <HBox alignment="CENTER_RIGHT" HBox.hgrow="ALWAYS">
-                <Button onAction="#Logout" style="-fx-background-color: #ff4444; -fx-text-fill: white;" text="Logout" />
+                <Button onAction="#Logout" style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-cursor: hand;" text="Logout" />
             </HBox>
         </HBox>
     </top>
@@ -35,16 +35,19 @@
 
     <center>
         <VBox spacing="10.0" style="-fx-padding: 20;">
-            <Label text="Active Orders">
-                <font>
-                    <Font size="18.0" />
-                </font>
-            </Label>
+            <HBox prefHeight="37.0" prefWidth="378.0">
+                <children>
+                    <Button mnemonicParsing="false" onAction="#Refresh" style="-fx-background-color: #00dd33; -fx-padding: 10; -fx-cursor: hand;" text="Refresh Table" textFill="#faf8f8" />
+                </children>
+            </HBox>
 
             <TableView fx:id="orderTable" VBox.vgrow="ALWAYS">
                 <columns>
-                    <TableColumn fx:id="colId" prefWidth="75.0" text="Order ID" />
-                    <TableColumn fx:id="colCustomer" prefWidth="150.0" text="Customer Name" />
+                    <TableColumn fx:id="colId" prefWidth="50.0" text="ID" />
+                    <TableColumn fx:id="colCustomer" prefWidth="120.0" text="Customer" />
+
+                    <TableColumn fx:id="colDetails" prefWidth="200.0" text="Order Details" />
+
                     <TableColumn fx:id="colStatus" prefWidth="100.0" text="Status" />
                     <TableColumn fx:id="colTotal" prefWidth="100.0" text="Total (Tk)" />
                 </columns>
@@ -55,9 +58,10 @@
 
             <HBox alignment="CENTER_RIGHT" spacing="15.0">
                 <Label text="Update Status to: " />
-                <Button onAction="#Washing" style="-fx-base: #ffd700;" text="Washing" />
-                <Button onAction="#Ready" style="-fx-base: #32cd32;" text="Ready" />
-                <Button onAction="#Delivered" style="-fx-base: #808080;" text="Delivered" />
+                <Button onAction="#Washing" style="-fx-base: #ffd700; -fx-cursor: hand;" text="Washing" />
+                <Button onAction="#Ready" style="-fx-base: #32cd32; -fx-cursor: hand;" text="Ready" />
+                <Button onAction="#Delivered" style="-fx-base: #808080; -fx-cursor: hand;" text="Delivered" />
+                <Button onAction="#Delete" style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-cursor: hand;" text="DELETE" />
             </HBox>
         </VBox>
     </center>

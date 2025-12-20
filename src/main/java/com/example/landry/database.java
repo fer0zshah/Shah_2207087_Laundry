@@ -8,7 +8,6 @@ import java.sql.Statement;
 
 public class database {
 
-
     private static final String URL = "jdbc:sqlite:laundry.db";
 
     public static Connection connect() {
@@ -22,14 +21,14 @@ public class database {
     }
 
     public static void initializeDB() {
-
-        String sql = "CREATE TABLE IF NOT EXISTS users ("
+        String sqlUsers = "CREATE TABLE IF NOT EXISTS users ("
                 + "phone TEXT PRIMARY KEY, "
                 + "name TEXT NOT NULL, "
                 + "password TEXT NOT NULL, "
                 + "address TEXT, "
                 + "role TEXT NOT NULL"
                 + ");";
+
         String sqlOrders = "CREATE TABLE IF NOT EXISTS orders ("
                 + "order_id INTEGER PRIMARY KEY AUTOINCREMENT, "
                 + "customer_phone TEXT, "
@@ -42,10 +41,9 @@ public class database {
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
 
-            stmt.execute(sql);
+            stmt.execute(sqlUsers);
             stmt.execute(sqlOrders);
-            System.out.println("Database initialized and Users table checked.");
-
+            System.out.println("Database initialized.");
 
             createDefaultAdmin(conn);
 
@@ -59,7 +57,6 @@ public class database {
         try {
             Statement stmt = conn.createStatement();
             if (stmt.executeQuery(checkSql).getInt(1) == 0) {
-
                 String insertSql = "INSERT INTO users(phone, name, password, address, role) VALUES(?, ?, ?, ?, ?)";
                 PreparedStatement pstmt = conn.prepareStatement(insertSql);
                 pstmt.setString(1, "admin");
@@ -68,7 +65,7 @@ public class database {
                 pstmt.setString(4, "Shop Office");
                 pstmt.setString(5, "Admin");
                 pstmt.executeUpdate();
-                System.out.println("Default Admin created (User: admin, Pass: 1234)");
+                System.out.println("Default Admin created.");
             }
         } catch (SQLException e) {
             e.printStackTrace();

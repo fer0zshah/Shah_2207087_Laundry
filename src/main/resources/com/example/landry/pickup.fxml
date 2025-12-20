@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.CheckBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.RadioButton?>
+<?import javafx.scene.control.ToggleGroup?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.landry.pickupController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #2a5082; -fx-padding: 15;">
+            <Button onAction="#handleBack" text="← Back" textFill="WHITE" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-cursor: hand;"/>
+            <Label text="New Pickup Request" textFill="WHITE">
+                <font><Font name="System Bold" size="18.0" /></font>
+                <HBox.margin><Insets left="20.0"/></HBox.margin>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-padding: 30;">
+
+            <Label text="Select Items" textFill="#2a5082">
+                <font><Font name="System Bold" size="16.0" /></font>
+            </Label>
+
+            <GridPane hgap="20" vgap="15" alignment="CENTER">
+
+                <Label text="Shirt (10 Tk)" GridPane.columnIndex="0" GridPane.rowIndex="0" style="-fx-font-size: 14;" />
+                <Button onAction="#decreaseShirt" text="-" GridPane.columnIndex="1" GridPane.rowIndex="0"/>
+                <Label fx:id="lblShirt" text="0" GridPane.columnIndex="2" GridPane.rowIndex="0" style="-fx-font-weight: bold;"/>
+                <Button onAction="#increaseShirt" text="+" GridPane.columnIndex="3" GridPane.rowIndex="0"/>
+
+                <Label text="Pant (15 Tk)" GridPane.columnIndex="0" GridPane.rowIndex="1" style="-fx-font-size: 14;" />
+                <Button onAction="#decreasePant" text="-" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+                <Label fx:id="lblPant" text="0" GridPane.columnIndex="2" GridPane.rowIndex="1" style="-fx-font-weight: bold;"/>
+                <Button onAction="#increasePant" text="+" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+
+                <Label text="Suit (50 Tk)" GridPane.columnIndex="0" GridPane.rowIndex="2" style="-fx-font-size: 14;" />
+                <Button onAction="#decreaseSuit" text="-" GridPane.columnIndex="1" GridPane.rowIndex="2"/>
+                <Label fx:id="lblSuit" text="0" GridPane.columnIndex="2" GridPane.rowIndex="2" style="-fx-font-weight: bold;"/>
+                <Button onAction="#increaseSuit" text="+" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
+
+                <Label text="Blanket (100 Tk)" GridPane.columnIndex="0" GridPane.rowIndex="3" style="-fx-font-size: 14;" />
+                <Button onAction="#decreaseBlanket" text="-" GridPane.columnIndex="1" GridPane.rowIndex="3"/>
+                <Label fx:id="lblBlanket" text="0" GridPane.columnIndex="2" GridPane.rowIndex="3" style="-fx-font-weight: bold;"/>
+                <Button onAction="#increaseBlanket" text="+" GridPane.columnIndex="3" GridPane.rowIndex="3"/>
+
+            </GridPane>
+
+            <Label text="------------------------------------------------" textFill="#cccccc"/>
+
+            <Label text="Service Type" textFill="#2a5082">
+                <font><Font name="System Bold" size="16.0" /></font>
+            </Label>
+
+            <VBox spacing="10" alignment="CENTER">
+                <RadioButton fx:id="radioWashDry" text="Wash &amp; Dry (Standard)" selected="true">
+                    <toggleGroup>
+                        <ToggleGroup fx:id="serviceGroup"/>
+                    </toggleGroup>
+                </RadioButton>
+                <RadioButton fx:id="radioIron" text="Wash, Dry &amp; Iron (+5 Tk per cloth)" toggleGroup="$serviceGroup"/>
+            </VBox>
+
+            <HBox alignment="CENTER" spacing="10">
+                <Label text="Estimated Total: " style="-fx-font-size: 16;"/>
+                <Label fx:id="lblTotal" text="0.0 Tk" style="-fx-font-size: 18; -fx-font-weight: bold; -fx-text-fill: green;"/>
+            </HBox>
+
+            <Button onAction="#handleSubmit" text="Confirm Pickup Request"
+                    style="-fx-background-color: #2a5082; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 20; -fx-cursor: hand;" />
+
+        </VBox>
+    </center>
+</BorderPane>

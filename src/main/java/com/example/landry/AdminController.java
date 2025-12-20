@@ -6,46 +6,38 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.control.Alert;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.stage.Stage;
+
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import javafx.scene.control.Alert;
-
-import java.io.IOException;
 
 public class AdminController {
 
-    @FXML
-    private TableView<OrderModel> orderTable;
-    @FXML
-    private TableColumn<OrderModel, Integer> colId;
-    @FXML
-    private TableColumn<OrderModel, String> colCustomer;
-    @FXML
-    private TableColumn<OrderModel, String> colStatus;
-    @FXML
-    private TableColumn<OrderModel, Double> colTotal;
+    @FXML private TableView<OrderModel> orderTable;
+    @FXML private TableColumn<OrderModel, Integer> colId;
+    @FXML private TableColumn<OrderModel, String> colCustomer;
+    @FXML private TableColumn<OrderModel, String> colDetails; // New Column
+    @FXML private TableColumn<OrderModel, String> colStatus;
+    @FXML private TableColumn<OrderModel, Double> colTotal;
 
     private ObservableList<OrderModel> orderList = FXCollections.observableArrayList();
 
     @FXML
     public void initialize() {
-        colId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
-        colCustomer.setCellValueFactory(new PropertyValueFactory<>("customerName"));
-        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
-        colTotal.setCellValueFactory(new PropertyValueFactory<>("totalAmount"));
 
-//        orderList.add(new OrderModel(101, "Rahim Ahmed", "Pending", 150.0));
-//        orderList.add(new OrderModel(102, "Karim Ullah", "Washing", 320.0));
-//        orderList.add(new OrderModel(103, "Sultana Begum", "Ready", 80.0));
+        colId.setCellValueFactory(new PropertyValueFactory<>("orderId"));
+        colCustomer.setCellValueFactory(new PropertyValueFactory<>("customerPhone"));
+        colDetails.setCellValueFactory(new PropertyValueFactory<>("details"));
+        colStatus.setCellValueFactory(new PropertyValueFactory<>("status"));
+        colTotal.setCellValueFactory(new PropertyValueFactory<>("amount"));
 
         loadOrders();
     }
@@ -59,14 +51,14 @@ public class AdminController {
              ResultSet rs = pstmt.executeQuery()) {
 
             while (rs.next()) {
-
-                int id = rs.getInt("order_id");
-                String phone = rs.getString("customer_phone");
-                String status = rs.getString("status");
-                double amount = rs.getDouble("amount");
-                orderList.add(new OrderModel(id, phone, status, amount));
+                orderList.add(new OrderModel(
+                        rs.getInt("order_id"),
+                        rs.getString("customer_phone"),
+                        rs.getString("details"),
+                        rs.getString("status"),
+                        rs.getDouble("amount")
+                ));
             }
-
             orderTable.setItems(orderList);
 
         } catch (SQLException e) {
@@ -74,39 +66,77 @@ public class AdminController {
         }
     }
 
-    // 2. Status Update Logic
-    @FXML
-    public void Washing() { updateStatus("Washing"); }
-    @FXML
-    public void Ready() { updateStatus("Ready"); }
-    @FXML
-    public void Delivered() { updateStatus("Delivered"); }
+    @FXML public void Refresh() { loadOrders(); }
+
+    @FXML public void Washing() { updateStatus("Washing"); }
+    @FXML public void Ready() { updateStatus("Ready"); }
+    @FXML public void Delivered() { updateStatus("Delivered"); }
 
     private void updateStatus(String newStatus) {
-        OrderModel selectedOrder = orderTable.getSelectionModel().getSelectedItem();
-        if (selectedOrder == null) {
-            showAlert("Error", "Please select an order from the table first!");
+        OrderModel selected = orderTable.getSelectionModel().getSelectedItem();
+        if (selected == null) {
+            showAlert("Error", "Select an order first.");
             return;
         }
 
         String sql = "UPDATE orders SET status = ? WHERE order_id = ?";
-
         try (Connection conn = database.connect();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
             pstmt.setString(1, newStatus);
-            pstmt.setInt(2, selectedOrder.getOrderId());
+            pstmt.setInt(2, selected.getOrderId());
             pstmt.executeUpdate();
 
-            showAlert("Success", "Order #" + selectedOrder.getOrderId() + " updated to: " + newStatus);
+            loadOrders(); // Refresh table
+            showAlert("Success", "Order #" + selected.getOrderId() + " marked as " + newStatus);
 
-            loadOrders();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    @FXML
+    public void Delete(ActionEvent event) {
+        OrderModel selected = orderTable.getSelectionModel().getSelectedItem();
+
+        if (selected == null) {
+            showAlert("Error", "Please select an order to delete.");
+            return;
+        }
+        if (!"Delivered".equalsIgnoreCase(selected.getStatus())) {
+            showAlert("Restriction", "You can only delete orders that are 'Delivered'.");
+            return;
+        }
+
+        String sql = "DELETE FROM orders WHERE order_id = ?";
+
+        try (Connection conn = database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setInt(1, selected.getOrderId());
+            int rowsAffected = pstmt.executeUpdate();
+
+            if (rowsAffected > 0) {
+                loadOrders();
+                showAlert("Success", "Order #" + selected.getOrderId() + " has been deleted.");
+            } else {
+                showAlert("Error", "Could not delete the order.");
+            }
 
         } catch (SQLException e) {
             e.printStackTrace();
             showAlert("Database Error", e.getMessage());
         }
     }
+
+    @FXML
+    public void Logout(ActionEvent event) throws IOException {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
+        Scene scene = new Scene(fxmlLoader.load());
+        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+        stage.setScene(scene);
+        stage.show();
+    }
+
     private void showAlert(String title, String message) {
         Alert alert = new Alert(Alert.AlertType.INFORMATION);
         alert.setTitle(title);
@@ -114,40 +144,25 @@ public class AdminController {
         alert.setContentText(message);
         alert.showAndWait();
     }
-
-
-    @FXML
-    public void Logout(ActionEvent event) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
-        Parent root = fxmlLoader.load();
-        Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
-        double currentWidth = stage.getWidth();
-        double currentHeight = stage.getHeight();
-        Scene scene = new Scene(root);
-        stage.setScene(scene);
-        stage.setWidth(currentWidth);
-        stage.setHeight(currentHeight);
-
-    }
-
-
     public static class OrderModel {
         private int orderId;
-        private String customerName;
+        private String customerPhone;
+        private String details;
         private String status;
-        private double totalAmount;
+        private double amount;
 
-        public OrderModel(int orderId, String customerName, String status, double totalAmount) {
+        public OrderModel(int orderId, String customerPhone, String details, String status, double amount) {
             this.orderId = orderId;
-            this.customerName = customerName;
+            this.customerPhone = customerPhone;
+            this.details = details;
             this.status = status;
-            this.totalAmount = totalAmount;
+            this.amount = amount;
         }
 
         public int getOrderId() { return orderId; }
-        public String getCustomerName() { return customerName; }
+        public String getCustomerPhone() { return customerPhone; }
+        public String getDetails() { return details; }
         public String getStatus() { return status; }
-        public void setStatus(String status) { this.status = status; }
-        public double getTotalAmount() { return totalAmount; }
+        public double getAmount() { return amount; }
     }
 }
