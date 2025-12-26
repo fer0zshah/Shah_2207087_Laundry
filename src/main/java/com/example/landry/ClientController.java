@@ -44,15 +44,80 @@ public class ClientController {
         if (welcomeLabel != null) {
             welcomeLabel.setText("Welcome, " + userName + "!");
         }
+        checkOrderStatus();
     }
 
 
 
     @FXML
     public void initialize() {
-        statusText.setText("Ready for Orders");
-        statusText.setStyle("-fx-text-fill: #2a5082;");
-        statusProgress.setProgress(0.5);
+//        statusText.setText("Ready for Orders");
+//        statusText.setStyle("-fx-text-fill: #2a5082;");
+//        statusProgress.setProgress(0.5);
+    }
+    private void checkOrderStatus() {
+        String sql = "SELECT status FROM orders WHERE customer_phone = ? ORDER BY order_id DESC LIMIT 1";
+
+        try (Connection conn = database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, currentUserId);
+            ResultSet rs = pstmt.executeQuery();
+
+            if (rs.next()) {
+                String status = rs.getString("status");
+                updateProgressUI(status);
+            } else {
+                statusText.setText("Ready for Orders");
+                statusProgress.setProgress(0.0);
+                statusProgress.setStyle("-fx-accent: #b2bec3;");
+            }
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+    private void updateProgressUI(String status) {
+        statusText.setText("Current Status: " + status);
+        statusText.setStyle("-fx-text-fill: #2a5082; -fx-font-weight: bold;");
+
+        switch (status) {
+            case "Pending":
+                statusProgress.setProgress(0.1);
+                statusProgress.setStyle("-fx-accent: #f1c40f;");
+                break;
+
+            case "Accepted":
+                statusProgress.setProgress(0.25);
+                statusProgress.setStyle("-fx-accent: #112c26;");
+                break;
+
+            case "Washing":
+                statusProgress.setProgress(0.50);
+                statusProgress.setStyle("-fx-accent: #247e6b;");
+                break;
+
+            case "Ready":
+                statusProgress.setProgress(0.75);
+                statusProgress.setStyle("-fx-accent: #46833f;");
+                break;
+
+            case "Delivered":
+                statusProgress.setProgress(1.0);
+                statusProgress.setStyle("-fx-accent: #1efd04;");
+                break;
+
+            case "Rejected":
+                statusProgress.setProgress(1.0);
+                statusProgress.setStyle("-fx-accent: #d63031;");
+                statusText.setText("Order Rejected");
+                break;
+
+            default:
+                statusProgress.setProgress(0.0);
+                statusProgress.setStyle("-fx-accent: #b2bec3;"); // Grey
+                break;
+        }
     }
     @FXML
     public void Pickup(ActionEvent event) {

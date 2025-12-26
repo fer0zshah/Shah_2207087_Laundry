@@ -9,6 +9,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
 import javafx.scene.control.RadioButton;
 import javafx.stage.Stage;
+import javafx.scene.control.ToggleGroup;
 
 import java.io.IOException;
 import java.sql.Connection;
@@ -34,10 +35,27 @@ public class pickupController {
     @FXML private RadioButton radioWashDry, radioIron;
 
     private String currentUserId;
-
+    private ToggleGroup serviceToggleGroup;
 
     public void setUserId(String userId) {
         this.currentUserId = userId;
+    }
+    @FXML
+    public void initialize() {
+        // 1. Group the radio buttons so only one can be selected at a time
+        serviceToggleGroup = new ToggleGroup();
+        radioWashDry.setToggleGroup(serviceToggleGroup);
+        radioIron.setToggleGroup(serviceToggleGroup);
+
+        // 2. Default to "Wash & Dry"
+        radioWashDry.setSelected(true);
+
+        // 3. FORCE UPDATE: Run updateUI() whenever a radio button is clicked
+        radioWashDry.setOnAction(e -> updateUI());
+        radioIron.setOnAction(e -> updateUI());
+
+        // 4. Set initial zeros
+        updateUI();
     }
 
     @FXML public void increaseShirt() { countShirt++; updateUI(); }
