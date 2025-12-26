@@ -21,7 +21,7 @@ public class database {
     }
 
     public static void initializeDB() {
-        String sqlUsers = "CREATE TABLE IF NOT EXISTS users ("
+        String sql = "CREATE TABLE IF NOT EXISTS users ("
                 + "phone TEXT PRIMARY KEY, "
                 + "name TEXT NOT NULL, "
                 + "password TEXT NOT NULL, "
@@ -41,7 +41,7 @@ public class database {
         try (Connection conn = connect();
              Statement stmt = conn.createStatement()) {
 
-            stmt.execute(sqlUsers);
+            stmt.execute(sql);
             stmt.execute(sqlOrders);
             System.out.println("Database initialized.");
 

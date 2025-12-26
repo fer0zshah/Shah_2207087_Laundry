@@ -4,6 +4,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Node;
+import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Label;
@@ -27,20 +28,34 @@ public class ClientController {
 
     public void setUserId(String userId) {
         this.currentUserId = userId;
-        if(welcomeLabel != null) {
-            welcomeLabel.setText("Welcome, " + userId);
+
+        String userName = "Client";
+        String query = "SELECT name FROM users WHERE phone = ?";
+        try (Connection conn = database.connect();
+             PreparedStatement pstmt = conn.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                userName = rs.getString("name");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        if (welcomeLabel != null) {
+            welcomeLabel.setText("Welcome, " + userName + "!");
         }
     }
+
+
 
     @FXML
     public void initialize() {
         statusText.setText("Ready for Orders");
         statusText.setStyle("-fx-text-fill: #2a5082;");
-        statusProgress.setProgress(0.0);
+        statusProgress.setProgress(0.5);
     }
-
     @FXML
-    public void handleRequestPickup(ActionEvent event) {
+    public void Pickup(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("pickup.fxml"));
             Scene scene = new Scene(fxmlLoader.load());
@@ -130,11 +145,15 @@ public class ClientController {
     public void handleLogout(ActionEvent event) {
         try {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("hello-view.fxml"));
-            Scene scene = new Scene(fxmlLoader.load());
+            Parent root = fxmlLoader.load();
             Stage stage = (Stage)((Node) event.getSource()).getScene().getWindow();
+            double currentWidth = stage.getWidth();
+            double currentHeight = stage.getHeight();
+            Scene scene = new Scene(root);
             stage.setTitle("Login");
             stage.setScene(scene);
-            stage.show();
+            stage.setWidth(currentWidth);
+            stage.setHeight(currentHeight);
         } catch (IOException e) {
             e.printStackTrace();
         }

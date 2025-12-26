@@ -26,10 +26,11 @@
 
     <left>
         <VBox spacing="10.0" style="-fx-background-color: #e0e0e0; -fx-padding: 15;">
-            <Button maxWidth="Infinity" style="-fx-background-color: #14bf2c; -fx-text-fill: white;" text="Active Orders" />
-            <Button maxWidth="Infinity" text="New Order (+)" />
-            <Button maxWidth="Infinity" text="Pickup Requests" />
-            <Button maxWidth="Infinity" text="Revenue Report" />
+            <Button onAction="#Active" maxWidth="Infinity" style="-fx-background-color: #14bf2c; -fx-text-fill: white;" text="Active Orders" />
+            <Button  maxWidth="Infinity" text="New Order (+)" />
+            <Button onAction="#Pickup" maxWidth="Infinity" text="Pickup Requests" />
+            <Button maxWidth="Infinity" onAction="#RevenueReport" text="Revenue Report" />
+
         </VBox>
     </left>
 
@@ -56,12 +57,22 @@
                 </columnResizePolicy>
             </TableView>
 
-            <HBox alignment="CENTER_RIGHT" spacing="15.0">
-                <Label text="Update Status to: " />
-                <Button onAction="#Washing" style="-fx-base: #ffd700; -fx-cursor: hand;" text="Washing" />
-                <Button onAction="#Ready" style="-fx-base: #32cd32; -fx-cursor: hand;" text="Ready" />
-                <Button onAction="#Delivered" style="-fx-base: #808080; -fx-cursor: hand;" text="Delivered" />
-                <Button onAction="#Delete" style="-fx-background-color: #ff4444; -fx-text-fill: white; -fx-cursor: hand;" text="DELETE" />
+            <HBox spacing="10" alignment="CENTER_RIGHT" style="-fx-padding: 10;">
+
+                <HBox fx:id="boxStatusButtons" spacing="10" alignment="CENTER_RIGHT">
+                    <Label text="Update Status: "/>
+                    <Button onAction="#Washing" text="Washing" style="-fx-base: #ffd700;"/>
+                    <Button onAction="#Ready" text="Ready" style="-fx-base: #32cd32;"/>
+                    <Button onAction="#Delivered" text="Delivered" style="-fx-base: #808080;"/>
+                    <Button onAction="#Delete" text="DELETE" style="-fx-base: #ff4444;"/>
+                </HBox>
+
+                <HBox fx:id="boxRequestButtons" spacing="10" alignment="CENTER_RIGHT" visible="false" managed="false">
+                    <Label text="Incoming Request: " textFill="#2a5082" style="-fx-font-weight: bold;"/>
+                    <Button onAction="#Accept" text="✓ ACCEPT" style="-fx-background-color: #2a5082; -fx-text-fill: white;"/>
+                    <Button onAction="#Reject" text="✕ REJECT" style="-fx-background-color: #cc0000; -fx-text-fill: white;"/>
+                </HBox>
+
             </HBox>
         </VBox>
     </center>

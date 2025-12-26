@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<BorderPane prefHeight="600.0" prefWidth="900.0" style="-fx-background-color: #f4f4f4;" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.landry.RevenueController">
+
+    <top>
+        <HBox alignment="CENTER_LEFT" prefHeight="70.0" style="-fx-background-color: #bfa316; -fx-padding: 20;">
+            <Label text="Revenue Report" textFill="WHITE">
+                <font>
+                    <Font name="System Bold" size="28.0" />
+                </font>
+            </Label>
+        </HBox>
+    </top>
+
+    <center>
+        <VBox alignment="CENTER" spacing="40.0">
+
+            <HBox alignment="CENTER" spacing="30.0">
+                <VBox alignment="CENTER" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+                    <Label text="Today's Income" textFill="#777777">
+                        <font><Font size="14.0" /></font>
+                    </Label>
+                    <Label fx:id="lblToday" text="0 Tk" textFill="#2ecc71">
+                        <font><Font name="System Bold" size="28.0" /></font>
+                    </Label>
+                </VBox>
+
+                <VBox alignment="CENTER" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+                    <Label text="This Month" textFill="#777777">
+                        <font><Font size="14.0" /></font>
+                    </Label>
+                    <Label fx:id="lblMonth" text="0 Tk" textFill="#3498db">
+                        <font><Font name="System Bold" size="28.0" /></font>
+                    </Label>
+                </VBox>
+
+                <VBox alignment="CENTER" prefHeight="150.0" prefWidth="200.0" style="-fx-background-color: white; -fx-background-radius: 15; -fx-effect: dropshadow(three-pass-box, rgba(0,0,0,0.1), 10, 0, 0, 0);">
+                    <Label text="Total Lifetime" textFill="#777777">
+                        <font><Font size="14.0" /></font>
+                    </Label>
+                    <Label fx:id="lblTotal" text="0 Tk" textFill="#e67e22">
+                        <font><Font name="System Bold" size="28.0" /></font>
+                    </Label>
+                </VBox>
+            </HBox>
+
+            <HBox alignment="CENTER" maxWidth="600" style="-fx-background-color: #dfe6e9; -fx-padding: 15; -fx-background-radius: 8;">
+                <Label text="Potential Pending Income: " style="-fx-font-size: 16px;"/>
+                <Label fx:id="lblPending" text="0 Tk" textFill="#555555">
+                    <font><Font name="System Bold" size="16.0"/></font>
+                </Label>
+            </HBox>
+
+            <Button mnemonicParsing="false" onAction="#Back" prefHeight="40.0" prefWidth="120.0" style="-fx-background-color: #555555; -fx-text-fill: white; -fx-cursor: hand;" text="Back">
+                <font><Font name="System Bold" size="14.0"/></font>
+            </Button>
+
+        </VBox>
+    </center>
+
+</BorderPane>

@@ -15,7 +15,7 @@
 <BorderPane xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.landry.pickupController">
 
     <top>
-        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #2a5082; -fx-padding: 15;">
+        <HBox alignment="CENTER_LEFT" style="-fx-background-color: #e6c104; -fx-padding: 15;">
             <Button onAction="#handleBack" text="← Back" textFill="WHITE" style="-fx-background-color: transparent; -fx-font-size: 14; -fx-cursor: hand;"/>
             <Label text="New Pickup Request" textFill="WHITE">
                 <font><Font name="System Bold" size="18.0" /></font>
@@ -27,7 +27,7 @@
     <center>
         <VBox alignment="TOP_CENTER" spacing="20.0" style="-fx-padding: 30;">
 
-            <Label text="Select Items" textFill="#2a5082">
+            <Label text="Select Items" textFill="#1efcff">
                 <font><Font name="System Bold" size="16.0" /></font>
             </Label>
 
@@ -57,7 +57,7 @@
 
             <Label text="------------------------------------------------" textFill="#cccccc"/>
 
-            <Label text="Service Type" textFill="#2a5082">
+            <Label text="Service Type" textFill="#0af7ff">
                 <font><Font name="System Bold" size="16.0" /></font>
             </Label>
 
@@ -76,7 +76,7 @@
             </HBox>
 
             <Button onAction="#handleSubmit" text="Confirm Pickup Request"
-                    style="-fx-background-color: #2a5082; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 20; -fx-cursor: hand;" />
+                    style="-fx-background-color: #efe30c; -fx-text-fill: white; -fx-font-size: 14; -fx-padding: 10 20; -fx-cursor: hand;" />
 
         </VBox>
     </center>

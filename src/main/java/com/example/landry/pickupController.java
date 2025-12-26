@@ -28,7 +28,7 @@ public class pickupController {
     private final int PRICE_PANT = 15;
     private final int PRICE_SUIT = 50;
     private final int PRICE_BLANKET = 100;
-    private final int PRICE_IRON_ADDON = 5;
+    private final int IRON = 5;
 
     @FXML private Label lblShirt, lblPant, lblSuit, lblBlanket, lblTotal;
     @FXML private RadioButton radioWashDry, radioIron;
@@ -64,7 +64,7 @@ public class pickupController {
 
         if (radioIron.isSelected()) {
             int totalItems = countShirt + countPant + countSuit + countBlanket;
-            total += (totalItems * PRICE_IRON_ADDON);
+            total += (totalItems * IRON);
         }
 
         lblTotal.setText(total + " Tk");
